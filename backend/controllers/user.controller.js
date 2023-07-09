@@ -1,6 +1,9 @@
 const db = require("../models");
 
 const Booking = db.booking;
+const RentalSpace = db.rentalSpace;
+
+
 
 exports.allAccess = (req, res) => {
     res.status(200).send("Public Content.");
@@ -38,7 +41,26 @@ exports.book = async (req, res) => {
     }
 };
 
+exports.rentalSpace = async (req, res) => {
+  try {
+    const { name, location, size, hasOutdoorSpace, cateringIncluded,image } = req.body;
 
+    // Create the rental space
+    const rentalSpace = await RentalSpace.create({
+      name,
+      location,
+      size,
+      hasOutdoorSpace,
+      cateringIncluded,
+      image,
+    });
+
+    return res.status(201).json({ rentalSpace });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'An error occurred while creating the rental space.' });
+  }
+};
 
 async function checkAvailability(rentalSpaceId, startDateTime, endDateTime) {
     const previousBooking = await Booking.findOne({

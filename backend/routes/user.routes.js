@@ -18,7 +18,7 @@ module.exports = function(app) {
     controller.userBoard
   );
 
-  app.get(
+  app.post(
     "/api/test/book",
     [authJwt.verifyToken],
     controller.book
@@ -28,5 +28,16 @@ module.exports = function(app) {
     "/api/test/admin",
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminBoard
+  );
+
+  app.post(
+    "/api/test/rentalSpace",
+    controller.rentalSpace
+  );
+
+  app.delete(
+    "/api/test/rentalSpace/:",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.rentalSpace
   );
 };
