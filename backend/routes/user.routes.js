@@ -34,7 +34,7 @@ module.exports = function (app) {
 
   app.delete(
     "/api/test/rentalSpace/:id",
-    // [authJwt.verifyToken, authJwt.isAdmin],
+    [authJwt.verifyToken, authJwt.isAdmin],
     controller.derentalSpace
   );
 };

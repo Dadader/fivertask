@@ -45,10 +45,12 @@ const LoginUser = () => {
 
     form.current.validateAll();
 
+    //I hvae created a Separated Service for Login which loads the Desired User from the DataBase by providing is username and password.
     if (checkBtn.current.context._errors.length === 0) {
       AuthService.login(username, password).then(
         () => {
-          navigate("/profile");
+          //IF the user Successfully logins it navigates the user to Home Page.
+          navigate("/Home");
           window.location.reload();
         },
         (error) => {

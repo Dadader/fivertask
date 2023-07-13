@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { useParams } from "react-router-dom";
 
-const Createspace = () => {
+function UpdateSpace() {
+  const { id } = useParams();
   const [formData, setFormData] = useState({
     name: "",
     Description: "",
@@ -17,6 +19,28 @@ const Createspace = () => {
 
   const [errors, setErrors] = useState({});
   const [selectedImage, setSelectedImage] = useState(null);
+
+  // useEffect(() => {
+  //   const fetchSpaceDetails = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `http://localhost:5000/api/test/rentalSpace/${id}`
+  //       );
+  //       if (response.ok) {
+  //         const spaceData = await response.json();
+  //         setFormData(spaceData);
+  //       } else {
+  //         console.log("Failed to fetch rental space details");
+  //         // Handle error response or display error message to the user
+  //       }
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //       // Handle network errors or display error message to the user
+  //     }
+  //   };
+
+  //   fetchSpaceDetails();
+  // }, [id]);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -91,7 +115,7 @@ const Createspace = () => {
     }
   };
 
-    //This function is for Validation Such that no Field in the Form is Empty
+  //This function is for Validation Such that no Field in the Form is Empty
   const validateForm = () => {
     const errors = {};
 
@@ -119,7 +143,7 @@ const Createspace = () => {
 
   return (
     <div className="container">
-      <h2>Create Rental Space</h2>
+      <h2>Update Rental Space</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="name">
           <Form.Label>Name</Form.Label>
@@ -239,11 +263,11 @@ const Createspace = () => {
         )}
 
         <Button variant="primary" type="submit">
-          Create
+          Update
         </Button>
       </Form>
     </div>
   );
-};
+}
 
-export default Createspace;
+export default UpdateSpace;

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
-import $ from "jquery";
+
+import AuthService from "../../Services/auth.service";
 
 const RentalSpace = () => {
   const { id } = useParams();
@@ -11,18 +12,24 @@ const RentalSpace = () => {
   const [startDateTime, setStartDateTime] = useState("");
   const [endDateTime, setEndDateTime] = useState("");
 
-  const handleShowBookings = () => {
-    console.log("llll");
-    setShowBookingsModal(true);
-  };
+  const [currentUser, setCurrentUser] = useState(undefined);
 
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
+
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, []);
+
+  //This functions books the rental space for the user.
   const handleRentIt = () => {
     const bookingData = {
       rentalSpaceId: id,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
     };
-  
+
     fetch("http://localhost:5000/api/test/book", {
       method: "POST",
       headers: {
@@ -47,8 +54,8 @@ const RentalSpace = () => {
         // Handle any network or API errors
       });
   };
-  
 
+  //This Api fethces the bookings for that particular rental Space.
   useEffect(() => {
     fetch(`http://localhost:5000/api/test/viewrentalspace/${id}`)
       .then((response) => response.json())
@@ -57,6 +64,17 @@ const RentalSpace = () => {
       })
       .catch((error) => console.error("Error:", error));
   }, [id]);
+
+  //This Api fethces the bookings for that particular rental Space.
+  const handleShowBookings = () => {
+    fetch(`http://localhost:5000/api/test/viewrentalspace/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setRentalSpace(data);
+      })
+      .catch((error) => console.error("Error:", error));
+    setShowBookingsModal(true);
+  };
 
   if (!rentalSpace) {
     return <div>Loading...</div>;
@@ -86,20 +104,25 @@ const RentalSpace = () => {
             Catering Included:{" "}
             {rentalSpace.rentalSpace.cateringIncluded ? "Yes" : "No"}
           </p>
-          <button
-            className="btn btn-success"
-            data-toggle="modal"
-            data-target="#rentModal2"
-          >
-            Show booking
-          </button>
-          <button
-            className="btn btn-success"
-            data-toggle="modal"
-            data-target="#rentModal"
-          >
-            Rent It
-          </button>
+          <div className="d-flex">
+            <button
+              className="btn btn-success mr-2"
+              data-toggle="modal"
+              data-target="#rentModal2"
+              onClick={handleShowBookings}
+            >
+              Show booking
+            </button>
+            {currentUser && (
+              <button
+                className="btn btn-success"
+                data-toggle="modal"
+                data-target="#rentModal"
+              >
+                Rent It
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -118,25 +141,39 @@ const RentalSpace = () => {
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div className="modal-body">
-            {rentalSpace.bookings.map((booking, index) => (
-  <div key={booking.id}>
-    <h6>Booking {index + 1}</h6>
-    <p>Start Date/Time: {booking.startDateTime}</p>
-    <p>End Date/Time: {booking.endDateTime}</p>
-  </div>
-))}
 
+            <div className="modal-body">
+              {rentalSpace.bookings.map((booking, index) => (
+                <div key={booking.id}>
+                  <h6>Booking {index + 1}:</h6>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <div>
+                      <p>
+                        <b>Start Date:</b>{" "}
+                        {new Date(booking.startDateTime).toLocaleDateString()}
+                      </p>
+                      <p>
+                        <b>Start Time: </b>{" "}
+                        {new Date(booking.startDateTime).toLocaleTimeString()}
+                      </p>
+                    </div>
+                    <div>
+                      <p>
+                        <b>End Date:</b>{" "}
+                        {new Date(booking.endDateTime).toLocaleDateString()}
+                      </p>
+                      <p>
+                        <b>End Time:</b>{" "}
+                        {new Date(booking.endDateTime).toLocaleTimeString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
             <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleRentIt}
-                data-dismiss="modal"
-              >
-                Rent
-              </button>
               <button
                 type="button"
                 className="btn btn-secondary"

@@ -79,6 +79,7 @@ const RegisterUser = () => {
 
     form.current.validateAll();
 
+    //This Service Registers the user
     if (checkBtn.current.context._errors.length === 0) {
       AuthService.register(username, email, password).then(
         (response) => {

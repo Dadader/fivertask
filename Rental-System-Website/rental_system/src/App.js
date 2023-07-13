@@ -7,16 +7,15 @@ import AuthService from "./Services/auth.service";
 
 import LoginUser from "./Pages/Login/index";
 import RegisterUser from "./Pages/RegisterUser/index";
-import Home from "./Components/Home";
 import Profile from "./Pages/Profile/index";
 import RentalSpacesList from "./Components/RentalSpace";
 import BoardAdmin from "./Components/BoardAdmin";
-import ChoiceUser from "./Pages/Choice";
-import Createspace from "./Pages/CreateSpace";
 
+import Createspace from "./Pages/CreateSpace";
 import EventBus from "./common/EventBus";
-import LoginAdmin from "./Pages/LoginAdmin";
 import RentalSpace from "./Pages/RentalSpace";
+import UpdateSpace from "./Pages/UpdateSpace";
+import MyBooking from "./Pages/MyBooking";
 
 const App = () => {
   const [showAdminBoard, setShowAdminBoard] = useState(false);
@@ -49,9 +48,10 @@ const App = () => {
   return (
     <div>
       <nav className="navbar navbar-expand navbar-dark bg-dark">
-        <Link to={"/"} className="navbar-brand">
-          bezKoder
+        <Link to={"/Home"} className="navbar-brand">
+          RentalSystem
         </Link>
+
         <div className="navbar-nav mr-auto">
           {/* <li className="nav-item">
             <Link to={"/home"} className="nav-link">
@@ -69,8 +69,15 @@ const App = () => {
 
           {currentUser && (
             <li className="nav-item">
-              <Link to={"/user"} className="nav-link">
-                User
+              <Link to={"/Home"} className="nav-link">
+                Market Place
+              </Link>
+            </li>
+          )}
+          {currentUser && !showAdminBoard && (
+            <li className="nav-item">
+              <Link to={"/MyBooking"} className="nav-link">
+                My Bookings
               </Link>
             </li>
           )}
@@ -89,37 +96,36 @@ const App = () => {
               </a>
             </li>
           </div>
-        ) : // ) : (
-        //   <div className="navbar-nav ml-auto">
-        //     <li className="nav-item">
-        //       <Link to={"/login"} className="nav-link">
-        //         Login
-        //       </Link>
-        //     </li>
+        ) : (
+          <div className="navbar-nav ml-auto">
+            <li className="nav-item">
+              <Link to={"/login"} className="nav-link">
+                Login
+              </Link>
+            </li>
 
-        //     <li className="nav-item">
-        //       <Link to={"/register"} className="nav-link">
-        //         Sign Up
-        //       </Link>
-        //     </li>
-        //   </div>
-        // )}
-        null}
+            <li className="nav-item">
+              <Link to={"/register"} className="nav-link">
+                Sign Up
+              </Link>
+            </li>
+          </div>
+        )}
       </nav>
 
       <div className="container mt-3">
         <Routes>
-          <Route path="/" element={<ChoiceUser />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/choice" element={<ChoiceUser />} />
-          <Route path="/loginadmin" element={<LoginAdmin />} />
+          <Route path="/" element={<RentalSpacesList />} />
+          {/* <Route path="/home" element={<Home />} /> */}
           <Route path="/rentalspace/:id" element={<RentalSpace />} />
           <Route path="/login" element={<LoginUser />} />
           <Route path="/register" element={<RegisterUser />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/user" element={<RentalSpacesList />} />
+          <Route path="/Home" element={<RentalSpacesList />} />
           <Route path="/CreateSpace" element={<Createspace />} />
+          <Route path="/MyBooking" element={<MyBooking />} />
           <Route path="/admin" element={<BoardAdmin />} />
+          <Route path="/Updatespace/:id" element={<UpdateSpace />} />
         </Routes>
       </div>
     </div>
