@@ -143,19 +143,25 @@ exports.viewrentalspace = async (req, res) => {
     return res.json(rentalData);
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({
-        error:
-          "An error occurred while retrieving rental space data and bookings.",
-      });
+    return res.status(500).json({
+      error:
+        "An error occurred while retrieving rental space data and bookings.",
+    });
   }
 };
 
 // Update a rental space by ID
 exports.updateRentalSpace = (req, res) => {
   const rentalSpaceId = req.params.id;
-  const { name, location, price, description, size, hasOutdoorSpace, cateringIncluded } = req.body;
+  const {
+    name,
+    location,
+    Price,
+    Description,
+    size,
+    hasOutdoorSpace,
+    cateringIncluded,
+  } = req.body;
 
   RentalSpace.findByPk(rentalSpaceId)
     .then((rentalSpace) => {
@@ -165,8 +171,8 @@ exports.updateRentalSpace = (req, res) => {
 
       rentalSpace.name = name;
       rentalSpace.location = location;
-      rentalSpace.price = price;
-      rentalSpace.description = description;
+      rentalSpace.Price = Price;
+      rentalSpace.Description = Description;
       rentalSpace.size = size;
       rentalSpace.hasOutdoorSpace = hasOutdoorSpace;
       rentalSpace.cateringIncluded = cateringIncluded;
@@ -174,7 +180,9 @@ exports.updateRentalSpace = (req, res) => {
       rentalSpace
         .save()
         .then(() => {
-          res.status(200).send({ message: "Rental space updated successfully" });
+          res
+            .status(200)
+            .send({ message: "Rental space updated successfully" });
         })
         .catch((error) => {
           res.status(500).send({ message: error.message });
@@ -202,7 +210,6 @@ exports.getRentalSpaceById = (req, res) => {
     });
 };
 
-
 async function checkAvailability(rentalSpaceId, startDateTime, endDateTime) {
   const overlappingBookings = await Booking.findAll({
     where: {
@@ -218,4 +225,3 @@ async function checkAvailability(rentalSpaceId, startDateTime, endDateTime) {
 
   return overlappingBookings.length === 0;
 }
-
