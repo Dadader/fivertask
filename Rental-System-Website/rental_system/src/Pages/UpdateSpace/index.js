@@ -93,6 +93,7 @@ function UpdateSpace() {
         if (response.ok) {
           // Form submission successful
           console.log("Form updated successfully");
+          alert("Space Updated Successfully");
           setFormData({
             name: "",
             Description: "",

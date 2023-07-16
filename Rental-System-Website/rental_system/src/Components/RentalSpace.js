@@ -45,7 +45,7 @@ const RentalSpacesList = () => {
       if (response.ok) {
         // Delete operation successful
         console.log("Rental space deleted successfully");
-
+        alert("Rental space deleted successfully");
         // Remove the record from the UI
         setRentalSpaces((prevRentalSpaces) =>
           prevRentalSpaces.filter((rentalSpace) => rentalSpace.id !== id)

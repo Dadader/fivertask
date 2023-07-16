@@ -65,6 +65,7 @@ const Createspace = () => {
         if (response.ok) {
           // Form submission successful
           console.log("Form submitted successfully");
+          alert("Space Created Successfully");
           setFormData({
             name: "",
             Description: "",
@@ -91,7 +92,7 @@ const Createspace = () => {
     }
   };
 
-    //This function is for Validation Such that no Field in the Form is Empty
+  //This function is for Validation Such that no Field in the Form is Empty
   const validateForm = () => {
     const errors = {};
 
