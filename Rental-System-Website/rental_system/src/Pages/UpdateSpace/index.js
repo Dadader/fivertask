@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
+import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { useParams } from "react-router-dom";
 
 function UpdateSpace() {
+  let navigate = useNavigate();
+
   const { id } = useParams();
   const [formData, setFormData] = useState({
     name: "",
@@ -20,27 +23,28 @@ function UpdateSpace() {
   const [errors, setErrors] = useState({});
   const [selectedImage, setSelectedImage] = useState(null);
 
-  // useEffect(() => {
-  //   const fetchSpaceDetails = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `http://localhost:5000/api/test/rentalSpace/${id}`
-  //       );
-  //       if (response.ok) {
-  //         const spaceData = await response.json();
-  //         setFormData(spaceData);
-  //       } else {
-  //         console.log("Failed to fetch rental space details");
-  //         // Handle error response or display error message to the user
-  //       }
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //       // Handle network errors or display error message to the user
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchSpaceDetails = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/test/getrentalSpace/${id}`
+        );
+        if (response.ok) {
+          const spaceData = await response.json();
+          setFormData(spaceData);
+          setSelectedImage(spaceData.image);
+        } else {
+          console.log("Failed to fetch rental space details");
+          // Handle error response or display error message to the user
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        // Handle network errors or display error message to the user
+      }
+    };
 
-  //   fetchSpaceDetails();
-  // }, [id]);
+    fetchSpaceDetails();
+  }, [id]);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -77,9 +81,9 @@ function UpdateSpace() {
       try {
         //This Api stores the Form Data into the DataBase.
         const response = await fetch(
-          "http://localhost:5000/api/test/rentalSpace",
+          `http://localhost:5000/api/test/updateRentalSpace/${id}`,
           {
-            method: "POST",
+            method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
@@ -88,7 +92,7 @@ function UpdateSpace() {
         );
         if (response.ok) {
           // Form submission successful
-          console.log("Form submitted successfully");
+          console.log("Form updated successfully");
           setFormData({
             name: "",
             Description: "",
@@ -102,6 +106,7 @@ function UpdateSpace() {
           });
           setSelectedImage(null);
           setErrors({});
+          navigate("/Home");
         } else {
           // Form submission failed
           console.log("Form submission failed");

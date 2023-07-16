@@ -152,6 +152,57 @@ exports.viewrentalspace = async (req, res) => {
   }
 };
 
+// Update a rental space by ID
+exports.updateRentalSpace = (req, res) => {
+  const rentalSpaceId = req.params.id;
+  const { name, location, price, description, size, hasOutdoorSpace, cateringIncluded } = req.body;
+
+  RentalSpace.findByPk(rentalSpaceId)
+    .then((rentalSpace) => {
+      if (!rentalSpace) {
+        return res.status(404).send({ message: "Rental space not found" });
+      }
+
+      rentalSpace.name = name;
+      rentalSpace.location = location;
+      rentalSpace.price = price;
+      rentalSpace.description = description;
+      rentalSpace.size = size;
+      rentalSpace.hasOutdoorSpace = hasOutdoorSpace;
+      rentalSpace.cateringIncluded = cateringIncluded;
+
+      rentalSpace
+        .save()
+        .then(() => {
+          res.status(200).send({ message: "Rental space updated successfully" });
+        })
+        .catch((error) => {
+          res.status(500).send({ message: error.message });
+        });
+    })
+    .catch((error) => {
+      res.status(500).send({ message: error.message });
+    });
+};
+
+// Get a rental space by ID
+exports.getRentalSpaceById = (req, res) => {
+  const rentalSpaceId = req.params.id;
+
+  RentalSpace.findByPk(rentalSpaceId)
+    .then((rentalSpace) => {
+      if (!rentalSpace) {
+        return res.status(404).send({ message: "Rental space not found" });
+      }
+
+      res.status(200).send(rentalSpace);
+    })
+    .catch((error) => {
+      res.status(500).send({ message: error.message });
+    });
+};
+
+
 async function checkAvailability(rentalSpaceId, startDateTime, endDateTime) {
   const overlappingBookings = await Booking.findAll({
     where: {

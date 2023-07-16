@@ -26,6 +26,11 @@ module.exports = function (app) {
 
   app.get("/api/test/rentalSpace", controller.getrentalSpace);
 
+  app.put("/api/test/updaterentalSpace/:id", controller.updateRentalSpace);
+
+  app.get("/api/test/getrentalSpace/:id", controller.getRentalSpaceById);
+
+
   app.get(
     "/api/test/viewrentalSpace/:id",
     // [authJwt.verifyToken, authJwt.isAdmin],
