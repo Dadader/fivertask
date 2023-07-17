@@ -229,16 +229,17 @@ async function checkAvailability(rentalSpaceId, startDateTime, endDateTime) {
   return overlappingBookings.length === 0;
 }
 
-// Get all users with their roles
+// Get all users with their roles except the specified ID
 exports.getAllUsersWithRoles = (req, res) => {
+  const excludedUserId = req.params.id;
+
   User.findAll({
-    include: [
-      {
-        model: Role,
-        attributes: ["id", "name"],
-        through: { attributes: [] }, // Exclude junction table attributes
+    where: {
+      id: {
+        [db.Sequelize.Op.ne]: excludedUserId,
       },
-    ],
+    },
+    include: [{ model: Role, attributes: ["id", "name"], through: { attributes: [] } }],
   })
     .then((users) => {
       res.status(200).send(users);
@@ -266,7 +267,7 @@ exports.getUserById = (req, res) => {
     });
 };
 
-// Update a user by ID
+// Update a user by ID (including optional password update)
 exports.updateUser = (req, res) => {
   const userId = req.params.id;
   const { username, email, password } = req.body;
@@ -277,14 +278,21 @@ exports.updateUser = (req, res) => {
         return res.status(404).send({ message: "User not found" });
       }
 
-      user.username = username;
-      user.email = email;
-      user.password = bcrypt.hashSync(password, 8);
+      // Update username if provided, otherwise keep the existing value
+      user.username = username || user.username;
 
-      user
-        .save()
-        .then(() => {
-          res.status(200).send({ message: "User updated successfully" });
+      // Update email if provided, otherwise keep the existing value
+      user.email = email || user.email;
+
+      // Update password if provided, otherwise keep the existing value
+      if (password) {
+        user.password = password;
+      }
+
+      // Save the updated user
+      user.save()
+        .then((updatedUser) => {
+          res.status(200).send(updatedUser);
         })
         .catch((error) => {
           res.status(500).send({ message: error.message });
@@ -294,6 +302,7 @@ exports.updateUser = (req, res) => {
       res.status(500).send({ message: error.message });
     });
 };
+
 
 // Delete a user by ID
 exports.deleteUserById = (req, res) => {

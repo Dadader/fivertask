@@ -30,11 +30,11 @@ module.exports = function (app) {
 
   app.get("/api/test/getrentalSpace/:id", controller.getRentalSpaceById);
 
-  app.get("/api/test/getallusers", controller.getAllUsersWithRoles);
+  app.get("/api/test/getallusers/:id", controller.getAllUsersWithRoles);
 
   app.get("/api/test/getuser/:id", controller.getUserById);
 
-  app.put("/api/test/updateuser/:id", controller.updateUser);
+  app.patch("/api/test/updateuser/:id", controller.updateUser);
 
   app.delete("/api/test/deleteuser/:id", controller.deleteUserById);
 
