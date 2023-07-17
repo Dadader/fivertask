@@ -3,7 +3,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
-
+import { useNavigate } from "react-router-dom";
 import AuthService from "../../Services/auth.service";
 
 const required = (value) => {
@@ -49,7 +49,7 @@ const vpassword = (value) => {
 const RegisterUser = () => {
   const form = useRef();
   const checkBtn = useRef();
-
+  let navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -85,6 +85,7 @@ const RegisterUser = () => {
         (response) => {
           setMessage(response.data.message);
           setSuccessful(true);
+          navigate("/login");
         },
         (error) => {
           const resMessage =
