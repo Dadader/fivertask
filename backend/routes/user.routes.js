@@ -30,7 +30,7 @@ module.exports = function (app) {
 
   app.get("/api/test/getrentalSpace/:id", controller.getRentalSpaceById);
 
-  app.get("/api/test/getallusers/:id", controller.getAllUsersWithRoles);
+  app.get("/api/test/getallusers", controller.getAllUsersWithRoles);
 
   app.get("/api/test/getuser/:id", controller.getUserById);
 
