@@ -319,7 +319,7 @@ exports.deleteUserById = (req, res) => {
 };
 
 exports.changeUserRole = (req, res) => {
-  const userId = req.params.userId;
+  const userId = req.params.id;
   const role = req.params.role;
 
   console.log(role);
