@@ -2,6 +2,8 @@ const db = require("../models");
 
 const Booking = db.booking;
 const RentalSpace = db.rentalSpace;
+const User = db.user;
+const Role = db.role;
 
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
@@ -225,3 +227,69 @@ async function checkAvailability(rentalSpaceId, startDateTime, endDateTime) {
 
   return overlappingBookings.length === 0;
 }
+
+// Get all users with their roles
+exports.getAllUsersWithRoles = (req, res) => {
+  User.findAll({
+    include: [
+      {
+        model: Role,
+        attributes: ["id", "name"],
+        through: { attributes: [] }, // Exclude junction table attributes
+      },
+    ],
+  })
+    .then((users) => {
+      res.status(200).send(users);
+    })
+    .catch((error) => {
+      res.status(500).send({ message: error.message });
+    });
+};
+
+
+// Get a user by ID
+exports.getUserById = (req, res) => {
+  const userId = req.params.id;
+
+  User.findByPk(userId)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: "User not found" });
+      }
+
+      res.status(200).send(user);
+    })
+    .catch((error) => {
+      res.status(500).send({ message: error.message });
+    });
+};
+
+// Update a user by ID
+exports.updateUser = (req, res) => {
+  const userId = req.params.id;
+  const { username, email, password } = req.body;
+
+  User.findByPk(userId)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: "User not found" });
+      }
+
+      user.username = username;
+      user.email = email;
+      user.password = password;
+
+      user
+        .save()
+        .then(() => {
+          res.status(200).send({ message: "User updated successfully" });
+        })
+        .catch((error) => {
+          res.status(500).send({ message: error.message });
+        });
+    })
+    .catch((error) => {
+      res.status(500).send({ message: error.message });
+    });
+};
