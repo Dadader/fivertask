@@ -229,17 +229,16 @@ async function checkAvailability(rentalSpaceId, startDateTime, endDateTime) {
   return overlappingBookings.length === 0;
 }
 
-// Get all users with their roles except the specified ID
+// Get all users with their roles
 exports.getAllUsersWithRoles = (req, res) => {
-  const excludedUserId = req.params.id;
-
   User.findAll({
-    where: {
-      id: {
-        [db.Sequelize.Op.ne]: excludedUserId,
+    include: [
+      {
+        model: Role,
+        attributes: ["id", "name"],
+        through: { attributes: [] }, // Exclude junction table attributes
       },
-    },
-    include: [{ model: Role, attributes: ["id", "name"], through: { attributes: [] } }],
+    ],
   })
     .then((users) => {
       res.status(200).send(users);
