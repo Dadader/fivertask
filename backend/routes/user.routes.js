@@ -36,6 +36,12 @@ module.exports = function (app) {
 
   app.put("/api/test/updateuser/:id", controller.updateUser);
 
+  app.delete("/api/test/deleteuser/:id", controller.deleteUserById);
+
+  app.put("/api/test/changeuserrole/:id/:role", controller.changeUserRole);
+  
+  
+
   app.get(
     "/api/test/viewrentalSpace/:id",
     // [authJwt.verifyToken, authJwt.isAdmin],

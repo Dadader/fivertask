@@ -294,3 +294,61 @@ exports.updateUser = (req, res) => {
       res.status(500).send({ message: error.message });
     });
 };
+
+// Delete a user by ID
+exports.deleteUserById = (req, res) => {
+  const userId = req.params.id;
+
+  User.findByPk(userId)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: "User not found" });
+      }
+
+      user.destroy()
+        .then(() => {
+          res.status(200).send({ message: "User deleted successfully" });
+        })
+        .catch((error) => {
+          res.status(500).send({ message: error.message });
+        });
+    })
+    .catch((error) => {
+      res.status(500).send({ message: error.message });
+    });
+};
+
+exports.changeUserRole = (req, res) => {
+  const userId = req.params.userId;
+  const role = req.params.role;
+
+  console.log(role);
+
+  User.findByPk(userId)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: "User not found" });
+      }
+
+      Role.findOne({ where: { name: role } })
+        .then((role) => {
+          if (!role) {
+            return res.status(404).send({ message: "Role not found" });
+          }
+
+          user.setRoles([role])
+            .then(() => {
+              res.status(200).send({ message: "User role updated to admin" });
+            })
+            .catch((error) => {
+              res.status(500).send({ message: error.message });
+            });
+        })
+        .catch((error) => {
+          res.status(500).send({ message: error.message });
+        });
+    })
+    .catch((error) => {
+      res.status(500).send({ message: error.message });
+    });
+};
