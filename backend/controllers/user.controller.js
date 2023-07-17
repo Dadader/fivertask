@@ -4,6 +4,7 @@ const Booking = db.booking;
 const RentalSpace = db.rentalSpace;
 const User = db.user;
 const Role = db.role;
+var bcrypt = require("bcryptjs");
 
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
@@ -278,7 +279,7 @@ exports.updateUser = (req, res) => {
 
       user.username = username;
       user.email = email;
-      user.password = password;
+      user.password = bcrypt.hashSync(password, 8);
 
       user
         .save()

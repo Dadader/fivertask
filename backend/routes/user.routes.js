@@ -34,6 +34,7 @@ module.exports = function (app) {
 
   app.get("/api/test/getuser/:id", controller.getUserById);
 
+  app.put("/api/test/updateuser/:id", controller.updateUser);
 
   app.get(
     "/api/test/viewrentalSpace/:id",
