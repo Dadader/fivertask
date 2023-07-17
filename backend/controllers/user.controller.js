@@ -285,7 +285,7 @@ exports.updateUser = (req, res) => {
 
       // Update password if provided, otherwise keep the existing value
       if (password) {
-        user.password = password;
+        user.password = bcrypt.hashSync(password, 8);
       }
 
       // Save the updated user
