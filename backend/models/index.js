@@ -35,6 +35,8 @@ db.user.belongsToMany(db.role, {
 });
 db.rentalSpace.hasMany(db.booking, { foreignKey: 'rentalSpaceId' });
 db.booking.belongsTo(db.rentalSpace, { foreignKey: 'rentalSpaceId' });
+db.booking.belongsTo(db.user, { foreignKey: "userId" }); // Add this line
+
 
 db.ROLES = ["user", "admin"];
 

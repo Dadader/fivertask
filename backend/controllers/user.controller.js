@@ -20,7 +20,7 @@ exports.adminBoard = (req, res) => {
 
 exports.book = async (req, res) => {
   try {
-    const { rentalSpaceId, startDateTime, endDateTime } = req.body;
+    const { rentalSpaceId, startDateTime, endDateTime,userId } = req.body;
 
     // Check if the rental space is available for the specified dates
     const isAvailable = await checkAvailability(
@@ -39,6 +39,7 @@ exports.book = async (req, res) => {
       rentalSpaceId,
       startDateTime,
       endDateTime,
+      userId,
     });
 
     return res.status(201).json({ booking });
@@ -358,5 +359,29 @@ exports.changeUserRole = (req, res) => {
     })
     .catch((error) => {
       res.status(500).send({ message: error.message });
+    });
+};
+
+exports.getBookingByUserId = (req, res) => {
+  const userId = req.params.id;
+
+  Booking.findAll({
+    where: { userId },
+    include: [
+      {
+        model: User,
+        attributes: ["id", "username", "email"]
+      },
+      {
+        model: RentalSpace,
+        attributes: ["id", "name", "location", "size","Description","Price","zip_code","hasOutdoorSpace","cateringIncluded","image"]
+      }
+    ]
+  })
+    .then((bookings) => {
+      res.status(200).json(bookings);
+    })
+    .catch((error) => {
+      res.status(500).json({ message: error.message });
     });
 };

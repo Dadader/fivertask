@@ -39,7 +39,9 @@ module.exports = function (app) {
   app.delete("/api/test/deleteuser/:id", controller.deleteUserById);
 
   app.put("/api/test/changeuserrole/:id/:role", controller.changeUserRole);
-  
+
+  app.get("/api/test/getbookingbyuserid/:id", controller.getBookingByUserId);
+ 
   
 
   app.get(

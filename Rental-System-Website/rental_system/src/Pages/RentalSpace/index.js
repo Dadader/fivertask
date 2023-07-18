@@ -28,6 +28,7 @@ const RentalSpace = () => {
       rentalSpaceId: id,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
+      userId: currentUser.id,
     };
 
     fetch("http://localhost:5000/api/test/book", {

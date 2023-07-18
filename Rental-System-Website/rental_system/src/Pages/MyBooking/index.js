@@ -16,11 +16,15 @@ function MyBooking() {
   }, []);
 
   useEffect(() => {
+
+    const user = AuthService.getCurrentUser();
+    if (user) {
     //When the page mounts it fetches all the the rental spaces from the Database.
-    fetch("http://localhost:5000/api/test/rentalspace")
+    fetch(`http://localhost:5000/api/test/getbookingbyuserid/${user.id}`)
       .then((response) => response.json())
-      .then((data) => setRentalSpaces(data))
+      .then((data) => {setRentalSpaces(data);console.log(data);})
       .catch((error) => console.error("Error:", error));
+    }
   }, []);
 
   const handleCardClick = (id) => {
@@ -35,33 +39,34 @@ function MyBooking() {
       </header>
       <div className="row">
         {rentalSpaces.map((rentalSpace) => (
-          <div key={rentalSpace.id} className="col-md-4 mb-4">
+          <div key={rentalSpace.RentalSpace.id} className="col-md-4 mb-4">
             <div className="card">
               <div>
                 <img
-                  src={`${rentalSpace.image}`}
+                  src={`${rentalSpace.RentalSpace.image}`}
                   className="card-img-top"
                   alt="Rental Space"
                   height={200}
                   width={200}
                 />
                 <div className="card-body">
-                  <h5 className="card-title">{rentalSpace.name}</h5>
-                  <p className="card-text">Location: {rentalSpace.location}</p>
-                  <p className="card-text">Size: {rentalSpace.size} Sq. Yard</p>
+                  <h5 className="card-title">{rentalSpace.RentalSpace.name}</h5>
+                  <p className="card-text">Location: {rentalSpace.RentalSpace.location}</p>
+                  <p className="card-text">Size: {rentalSpace.RentalSpace.size} Sq. Yard</p>
                   <p className="card-text">
                     Has Outdoor Space:{" "}
-                    {rentalSpace.hasOutdoorSpace ? "Yes" : "No"}
+                    {rentalSpace.RentalSpace.hasOutdoorSpace ? "Yes" : "No"}
                   </p>
                   <p className="card-text">
                     Catering Included:{" "}
-                    {rentalSpace.cateringIncluded ? "Yes" : "No"}
+                    {rentalSpace.RentalSpace.cateringIncluded ? "Yes" : "No"}
                   </p>
                   <p className="card-text">
-                    Rent charges: {rentalSpace.Price}$ /hr
+                    Rent charges: {rentalSpace.RentalSpace.Price}$ /hr
                   </p>
-                  <p>Booking Date:</p>
-                  <p>Booking Time:</p>
+                  <p className="card-text" >Booking Start Time: {rentalSpace.startDateTime}</p>
+                  <p className="card-text" >Booking End Time: {rentalSpace.endDateTime}</p>
+
                 </div>
               </div>
             </div>
